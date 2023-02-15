@@ -38,7 +38,7 @@ public class PostController {
     }
 
     @PostMapping("/post/comment/{id}")
-    public Comment createComment(@PathVariable Long id, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request){
+    public CommentResponseDto createComment(@PathVariable Long id, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request){
         return postService.createComment(id, commentRequestDto, request);
     }
 
@@ -48,7 +48,7 @@ public class PostController {
     }
 
     @DeleteMapping("/post/comment/{commentId}")
-    public Comment deleteComment(@PathVariable Long commentId, HttpServletRequest request){
+    public CommentDeleteRequestDto deleteComment(@PathVariable Long commentId, HttpServletRequest request){
         return postService.deleteComment(commentId, request);
     }
 }

@@ -21,7 +21,9 @@ public class PostResponseDto {
         this.content = post.getContent();
         this.username = post.getUser().getUsername();
 
-        Collections.sort(comments, Collections.reverseOrder());
+        if(post.getComments()!=null){
+            Collections.sort(post.getComments(),Collections.reverseOrder());
+        }
         this.comments = post.getComments();
     }
 
