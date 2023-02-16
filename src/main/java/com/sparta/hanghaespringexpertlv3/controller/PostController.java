@@ -22,7 +22,7 @@ public class PostController {
     }
 
     @GetMapping("/post")
-    public List<PostResponseDto> getPost(HttpServletRequest request){
+    public List<PostCommentSortDto> getPost(HttpServletRequest request){
 
         return postService.getPost(request);
     }

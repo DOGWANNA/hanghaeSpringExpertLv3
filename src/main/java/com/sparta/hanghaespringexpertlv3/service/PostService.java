@@ -45,20 +45,20 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponseDto> getPost(HttpServletRequest request) {
+    public List<PostCommentSortDto> getPost(HttpServletRequest request) {
         Claims claims = jwtUtil.combo(request);
 
         User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(NotFoundUserException::new);
 
         //작성 시간별 내림차순으로 게시물 반환
         List<Post> postList = postRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());
-        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        List<PostCommentSortDto> postCommentSortList = new ArrayList<>();
 
         for(Post post : postList){
-            postResponseDtoList.add(new PostResponseDto(post));
+            postCommentSortList.add(new PostCommentSortDto(post));
         }
 
-        return postResponseDtoList;
+        return postCommentSortList;
     }
 
     @Transactional

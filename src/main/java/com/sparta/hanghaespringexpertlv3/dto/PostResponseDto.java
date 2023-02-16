@@ -13,18 +13,12 @@ public class PostResponseDto {
     private String content;
 
     private String username;
-    private List<Comment> comments;
 
 
     public PostResponseDto(Post post) {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.username = post.getUser().getUsername();
-
-        if(post.getComments()!=null){
-            Collections.sort(post.getComments(),Collections.reverseOrder());
-        }
-        this.comments = post.getComments();
     }
 
 }

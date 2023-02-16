@@ -38,8 +38,6 @@ public class Post extends Timestamped{
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.user = user;
-
-        Collections.sort(comments,Collections.reverseOrder());
         this.comments = comments;
     }
 
