@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,6 +26,7 @@ public class Likes {
     @ManyToOne
     @JoinColumn(name = "POST_ID")
     private Post post;
+
 
     public Likes(User user, Post post) {
         this.user = user;

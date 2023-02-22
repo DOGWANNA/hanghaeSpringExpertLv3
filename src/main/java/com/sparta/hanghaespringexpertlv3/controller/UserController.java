@@ -1,11 +1,9 @@
 package com.sparta.hanghaespringexpertlv3.controller;
 
-import com.sparta.hanghaespringexpertlv3.dto.LoginRequestDto;
-import com.sparta.hanghaespringexpertlv3.dto.LoginResponseDto;
-import com.sparta.hanghaespringexpertlv3.dto.SignupRequestDto;
-import com.sparta.hanghaespringexpertlv3.dto.SignupResponseDto;
+import com.sparta.hanghaespringexpertlv3.dto.*;
 import com.sparta.hanghaespringexpertlv3.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -30,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public SignupResponseDto signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
+    public ResponseEntity<StatusResponseDto> signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
         return userService.signup(signupRequestDto);
     }
 

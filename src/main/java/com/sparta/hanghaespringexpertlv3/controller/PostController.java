@@ -5,8 +5,13 @@ import com.sparta.hanghaespringexpertlv3.entity.Comment;
 import com.sparta.hanghaespringexpertlv3.entity.Comment_Likes;
 import com.sparta.hanghaespringexpertlv3.entity.Likes;
 import com.sparta.hanghaespringexpertlv3.entity.Post;
+import com.sparta.hanghaespringexpertlv3.jwt.JwtAuthFilter;
+import com.sparta.hanghaespringexpertlv3.security.UserDetailsImpl;
 import com.sparta.hanghaespringexpertlv3.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,54 +23,27 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-
-    // 게시물 관련
-
-
     @PostMapping("/post")
-    public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request){
-        return postService.createPost(postRequestDto, request);
+    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return postService.createPost(postRequestDto, userDetails.getUser());
     }
 
     @GetMapping("/post")
-    public List<PostCommentSortDto> getPost(HttpServletRequest request){
-
-        return postService.getPost(request);
+    public ResponseEntity<List<PostCommentSortDto>> getPost(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return postService.getPost(userDetails.getUser());
     }
 
     @PutMapping("/post/{id}")
-    public PostUpdateResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto, HttpServletRequest request){
-        return postService.updatePost(id, postRequestDto, request);
+    public ResponseEntity<PostUpdateResponseDto> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return postService.updatePost(id, postRequestDto, userDetails.getUser());
     }
 
     @DeleteMapping("/post/{id}")
-    public PostDeleteResponseDto deletePost(@PathVariable Long id, HttpServletRequest request){
-        return postService.deletePost(id, request);
+    public ResponseEntity<StatusResponseDto> deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return postService.deletePost(id, userDetails.getUser());
     }
     @PostMapping("/post/like/{id}")
-    public Likes postChangeLike(@PathVariable Long id, HttpServletRequest request){
-        return postService.postChangeLike(id, request);
-    }
-
-
-    //댓글 관련
-
-    @PostMapping("/post/comment/{id}")
-    public CommentResponseDto createComment(@PathVariable Long id, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request){
-        return postService.createComment(id, commentRequestDto, request);
-    }
-
-    @PutMapping("/post/comment/{commentId}")
-    public Comment updateComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto,  HttpServletRequest request){
-        return postService.updateComment(commentId, commentRequestDto, request);
-    }
-
-    @DeleteMapping("/post/comment/{commentId}")
-    public CommentDeleteRequestDto deleteComment(@PathVariable Long commentId, HttpServletRequest request){
-        return postService.deleteComment(commentId, request);
-    }
-    @PostMapping("/post/comment/like/{commentId}")
-    public Comment_Likes commentChangeLike(@PathVariable Long commentId, HttpServletRequest request){
-        return postService.commentChangeLike(commentId, request);
+    public ResponseEntity<StatusResponseDto> postChangeLike(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return postService.postChangeLike(id, userDetails.getUser());
     }
 }

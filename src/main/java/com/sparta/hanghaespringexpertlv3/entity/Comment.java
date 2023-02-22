@@ -9,6 +9,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -35,6 +37,9 @@ public class Comment extends Timestamped{
     @ManyToOne
     @JoinColumn(name = "POST_ID")
     private Post post;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment_Likes> commentLikesList = new ArrayList();
 
     public Comment(String comment, User user, Post post) {
         this.comment = comment;
