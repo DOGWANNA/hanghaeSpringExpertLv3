@@ -188,6 +188,7 @@ public class PostService {
         return likes;
     }
 
+    @Transactional
     public Comment_Likes commentChangeLike(Long commentId, HttpServletRequest request) {
         Claims claims = jwtUtil.combo(request);
 

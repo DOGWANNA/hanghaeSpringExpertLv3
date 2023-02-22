@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.hanghaespringexpertlv3.dto.CommentRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
 @Entity
+@Setter
 @Getter
 @DynamicInsert
 @NoArgsConstructor
@@ -44,7 +46,9 @@ public class Comment extends Timestamped{
         this.comment = commentRequestDto.getComment();
     }
 
-    public void addLike(long likeCount) {this.likeCount = likeCount + 1;}
+    public void addLike(long likeCount) {
+        this.likeCount = likeCount + 1;
+    }
 
     public void subLike(long likeCount) {
         this.likeCount = likeCount - 1;

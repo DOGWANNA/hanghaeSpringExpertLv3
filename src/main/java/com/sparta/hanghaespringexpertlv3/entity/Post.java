@@ -38,7 +38,7 @@ public class Post extends Timestamped{
     private User user;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
     public Post(PostRequestDto postRequestDto, User user, List<Comment> comments){
