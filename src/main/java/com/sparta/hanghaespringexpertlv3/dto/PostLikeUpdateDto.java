@@ -1,11 +1,7 @@
 package com.sparta.hanghaespringexpertlv3.dto;
 
-import lombok.Getter;
-
-
-@Getter
-public class PostRequestDto {
+public class PostLikeUpdateDto {
     private String title;
     private String content;
-
+    private long likeCount;
 }

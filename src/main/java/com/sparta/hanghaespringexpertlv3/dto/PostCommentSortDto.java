@@ -7,7 +7,6 @@ import lombok.Getter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class PostCommentSortDto {
@@ -15,6 +14,7 @@ public class PostCommentSortDto {
     private String content;
 
     private String username;
+    private Long likeCount;
     private List<Comment> comments;
 
 
@@ -22,6 +22,7 @@ public class PostCommentSortDto {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.username = post.getUser().getUsername();
+        this.likeCount = post.getLikeCount();
 
         if(post.getComments()!=null){
             Collections.sort(post.getComments(),

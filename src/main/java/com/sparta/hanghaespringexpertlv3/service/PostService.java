@@ -1,17 +1,12 @@
 package com.sparta.hanghaespringexpertlv3.service;
 
 import com.sparta.hanghaespringexpertlv3.dto.*;
-import com.sparta.hanghaespringexpertlv3.entity.Comment;
-import com.sparta.hanghaespringexpertlv3.entity.Post;
-import com.sparta.hanghaespringexpertlv3.entity.User;
-import com.sparta.hanghaespringexpertlv3.entity.UserRoleEnum;
+import com.sparta.hanghaespringexpertlv3.entity.*;
 import com.sparta.hanghaespringexpertlv3.exception.NotFoundCommentException;
 import com.sparta.hanghaespringexpertlv3.exception.NotFoundPostException;
 import com.sparta.hanghaespringexpertlv3.exception.NotFoundUserException;
 import com.sparta.hanghaespringexpertlv3.jwt.JwtUtil;
-import com.sparta.hanghaespringexpertlv3.repository.CommentRepository;
-import com.sparta.hanghaespringexpertlv3.repository.PostRepository;
-import com.sparta.hanghaespringexpertlv3.repository.UserRepository;
+import com.sparta.hanghaespringexpertlv3.repository.*;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import net.bytebuddy.implementation.bytecode.Throw;
@@ -28,6 +23,8 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
+    private final CommentLikeRepository commentLikeRepository;
     private final JwtUtil jwtUtil;
 
     @Transactional
@@ -134,6 +131,7 @@ public class PostService {
         }
     }
 
+    @Transactional
     public CommentDeleteRequestDto deleteComment(Long commentId, HttpServletRequest request) {
         Claims claims = jwtUtil.combo(request);
 
@@ -164,5 +162,49 @@ public class PostService {
             // 댓글이 없으면 null 반환(어차피 예외 발생함)
             return null;
         }
+    }
+
+    @Transactional
+    public Likes postChangeLike(Long id, HttpServletRequest request) {
+        Claims claims = jwtUtil.combo(request);
+
+        User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(NotFoundUserException::new);
+        Post post = postRepository.findById(id).orElseThrow(NotFoundPostException::new);
+
+        //Likes가 없어도 됨.
+        Likes likes = likeRepository.findByIdAndUserId(id, user.getId());
+
+        if(likes != null){
+            //좋아요가 있으면 게시물 좋아요 Entity 삭제
+            likeRepository.deleteById(likes.getId());
+            post.subLike(post.getLikeCount());
+
+        }else{
+            //좋아요 엔티티가 게시물 없으면 좋아요 Entity 추가
+            likeRepository.saveAndFlush(new Likes(user, post));
+            post.addLike(post.getLikeCount());
+        }
+        //예외 처리 세분화 필요
+        return likes;
+    }
+
+    public Comment_Likes commentChangeLike(Long commentId, HttpServletRequest request) {
+        Claims claims = jwtUtil.combo(request);
+
+        User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(NotFoundUserException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
+
+        Comment_Likes clikes = commentLikeRepository.findByCommentIdAndUserId(commentId, user.getId());
+
+        if(clikes != null){
+            //댓글에 해당 회원의 좋아요가 있으면 게시물 좋아요 Entity 삭제
+            commentLikeRepository.deleteById(clikes.getId());
+            comment.subLike(comment.getLikeCount());
+        }else {
+            //댓글에 해당 회원의 좋아요가 있으면 게시물 좋아요 Entity 생성
+            commentLikeRepository.saveAndFlush(new Comment_Likes(user, comment));
+            comment.addLike(comment.getLikeCount());
+        }
+        return clikes;
     }
 }

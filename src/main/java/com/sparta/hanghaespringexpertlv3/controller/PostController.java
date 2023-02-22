@@ -2,6 +2,8 @@ package com.sparta.hanghaespringexpertlv3.controller;
 
 import com.sparta.hanghaespringexpertlv3.dto.*;
 import com.sparta.hanghaespringexpertlv3.entity.Comment;
+import com.sparta.hanghaespringexpertlv3.entity.Comment_Likes;
+import com.sparta.hanghaespringexpertlv3.entity.Likes;
 import com.sparta.hanghaespringexpertlv3.entity.Post;
 import com.sparta.hanghaespringexpertlv3.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+
+
+    // 게시물 관련
+
 
     @PostMapping("/post")
     public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request){
@@ -36,6 +42,13 @@ public class PostController {
     public PostDeleteResponseDto deletePost(@PathVariable Long id, HttpServletRequest request){
         return postService.deletePost(id, request);
     }
+    @PostMapping("/post/like/{id}")
+    public Likes postChangeLike(@PathVariable Long id, HttpServletRequest request){
+        return postService.postChangeLike(id, request);
+    }
+
+
+    //댓글 관련
 
     @PostMapping("/post/comment/{id}")
     public CommentResponseDto createComment(@PathVariable Long id, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request){
@@ -50,5 +63,9 @@ public class PostController {
     @DeleteMapping("/post/comment/{commentId}")
     public CommentDeleteRequestDto deleteComment(@PathVariable Long commentId, HttpServletRequest request){
         return postService.deleteComment(commentId, request);
+    }
+    @PostMapping("/post/comment/like/{commentId}")
+    public Comment_Likes commentChangeLike(@PathVariable Long commentId, HttpServletRequest request){
+        return postService.commentChangeLike(commentId, request);
     }
 }
